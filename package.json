@@ -48,6 +48,7 @@
     "class-validator": "^0.14.0",
     "dataloader": "^2.0.0",
     "express-openapi-validator": "^4.12.6",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "graphql": "^15.8.0",
     "humps": "^2.0.1",
     "joi": "^17.6.0",
