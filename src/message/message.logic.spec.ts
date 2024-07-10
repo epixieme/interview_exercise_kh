@@ -132,6 +132,7 @@ const replyMessageModel: ChatMessageModel = {
   resolved: false,
   likes: [],
   likesCount: 0,
+  tags: [],
 };
 
 const USER_BLOCK_DTO = {
@@ -162,6 +163,7 @@ describe('MessageLogic', () => {
     resolved: false,
     likes: [],
     likesCount: 0,
+    tags: [],
   };
 
   const mockGifMessage = {
@@ -192,6 +194,7 @@ describe('MessageLogic', () => {
     resolved: false,
     likes: [],
     likesCount: 0,
+    tags: [],
     richContent: {
       reply: {
         id: messageId,
@@ -338,6 +341,7 @@ describe('MessageLogic', () => {
           likes: [],
           likesCount: 0,
           isSenderBlocked: false,
+          tags: [],
         },
 
         {
@@ -354,6 +358,7 @@ describe('MessageLogic', () => {
           likes: [],
           likesCount: 0,
           isSenderBlocked: false,
+          tags: [],
         },
       ];
 
@@ -382,6 +387,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
       };
     }
 
@@ -550,7 +556,6 @@ describe('MessageLogic', () => {
     send = jest.fn();
   }
 
-
   class MockUserBlocksLogic implements IUserBlocksLogic {
     getBlockedUsers(
       userIds: ObjectID[],
@@ -615,7 +620,7 @@ describe('MessageLogic', () => {
     it('can create a new message with pusher implementation', async () => {
       jest.spyOn(messageData, 'create');
       await messageLogic.create(
-        { text: 'This is my message text', conversationId },
+        { text: 'This is my message text', conversationId, tags: ['test'] },
         { ...validUser, userId: senderId },
       );
 
@@ -633,6 +638,7 @@ describe('MessageLogic', () => {
         likes: [],
         likesCount: 0,
         isSenderBlocked: false,
+        tags: [],
       });
 
       expect(safeguardingService.clean).toHaveBeenCalledTimes(1);
@@ -652,6 +658,7 @@ describe('MessageLogic', () => {
         {
           text: 'replying',
           conversationId,
+          tags: [],
           richContent: { reply: { id: messageId } },
         },
         { ...validUser, userId: senderIdTwo },
@@ -669,6 +676,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           reply: {
@@ -709,6 +717,7 @@ describe('MessageLogic', () => {
         {
           text: 'gif',
           conversationId,
+          tags: [],
           richContent: mockGiphyContent,
         },
         { ...validUser, userId: senderIdTwo },
@@ -726,6 +735,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           giphy: {
@@ -762,6 +772,7 @@ describe('MessageLogic', () => {
         {
           text: 'an image',
           conversationId,
+          tags: [],
           richContent: {
             images: mockImages,
           },
@@ -781,6 +792,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           images: mockImages,
@@ -811,6 +823,7 @@ describe('MessageLogic', () => {
         {
           text: 'mockAttachments',
           conversationId,
+          tags: [],
           richContent: {
             attachments: mockAttachments,
           },
@@ -830,6 +843,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           attachments: mockAttachments,
@@ -860,6 +874,7 @@ describe('MessageLogic', () => {
         {
           text: 'mockPoll',
           conversationId,
+          tags: [],
           richContent: {
             poll: mockPoll,
           },
@@ -879,6 +894,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           poll: mockPoll,
@@ -927,6 +943,7 @@ describe('MessageLogic', () => {
           {
             text: 'mockPoll',
             conversationId,
+            tags: [],
             richContent: {
               poll: mockPoll,
             },
@@ -954,6 +971,7 @@ describe('MessageLogic', () => {
         {
           text: 'gif',
           conversationId,
+          tags: [],
           richContent: mockGiphyContent,
         },
         { ...validUser, userId: senderIdTwo },
@@ -963,6 +981,7 @@ describe('MessageLogic', () => {
         {
           text: 'replying',
           conversationId,
+          tags: [],
           richContent: { reply: { id: giphyMessage.id } },
         },
         { ...validUser, userId: senderIdTwo },
@@ -980,6 +999,7 @@ describe('MessageLogic', () => {
         deleted: false,
         resolved: false,
         likes: [],
+        tags: [],
         likesCount: 0,
         richContent: {
           reply: {
@@ -1018,7 +1038,7 @@ describe('MessageLogic', () => {
 
     it('can create a new message with kafka implementation', async () => {
       await messageLogic.create(
-        { text: 'This is my message text', conversationId },
+        { text: 'This is my message text', conversationId, tags: [] },
         {
           ...validUser,
           userId: senderId,
@@ -1029,7 +1049,7 @@ describe('MessageLogic', () => {
     it('updates conversation with last messageId while creating a message', async () => {
       jest.spyOn(conversationData, 'updateConversationWithLastMessage');
       const createdMessage = await messageLogic.create(
-        { text: 'This is my message text', conversationId },
+        { text: 'This is my message text', conversationId, tags: [] },
         validUser,
       );
       expect(
@@ -1040,7 +1060,7 @@ describe('MessageLogic', () => {
     it('registers last read for current user while creating the message', async () => {
       jest.spyOn(conversationData, 'recordLastMessageReadByUser');
       const createdMessage = await messageLogic.create(
-        { text: 'This is another message', conversationId },
+        { text: 'This is another message', conversationId, tags: [] },
         validUser,
       );
       expect(conversationData.recordLastMessageReadByUser).toHaveBeenCalledWith(

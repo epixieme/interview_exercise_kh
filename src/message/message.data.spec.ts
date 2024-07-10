@@ -64,7 +64,7 @@ describe('MessageData', () => {
     it('successfully creates a message', async () => {
       const conversationId = new ObjectID();
       const message = await messageData.create(
-        { conversationId, text: 'Hello world' },
+        { conversationId, text: 'Hello world', tags: ['test'] },
         senderId,
       );
 
@@ -78,6 +78,7 @@ describe('MessageData', () => {
         conversationId: conversationId,
         conversation: { id: conversationId.toHexString() },
         likesCount: 0,
+        tags: ['test'],
         sender: { id: senderId.toHexString() },
       });
     });
@@ -91,7 +92,7 @@ describe('MessageData', () => {
     it('successfully gets a message', async () => {
       const conversationId = new ObjectID();
       const sentMessage = await messageData.create(
-        { conversationId, text: 'Hello world' },
+        { conversationId, text: 'Hello world', tags: ['test'] },
         senderId,
       );
 
@@ -107,7 +108,7 @@ describe('MessageData', () => {
     it('successfully marks a message as deleted', async () => {
       const conversationId = new ObjectID();
       const message = await messageData.create(
-        { conversationId, text: 'Message to delete' },
+        { conversationId, text: 'Message to delete', tags: ['test'] },
         senderId,
       );
 
@@ -116,7 +117,7 @@ describe('MessageData', () => {
 
       // And that is it now deleted
       const deletedMessage = await messageData.delete(new ObjectID(message.id));
-
+      expect(deletedMessage.text).toEqual('This message has been deleted');
       expect(deletedMessage.deleted).toEqual(true);
     });
   });

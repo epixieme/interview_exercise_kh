@@ -113,6 +113,10 @@ export class MessageDto {
   @Field()
   text: string;
 
+  // tags are optional, don't have to provide a value - nullable true
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  tags: string[];
+
   @Field()
   conversationId: ObjectID;
 
@@ -149,6 +153,14 @@ export class ResolveMessageDto {
 
   @Field()
   messageId: ObjectID;
+}
+
+@InputType()
+export class UpdateMessageTagsDto {
+  @Field(() => ObjectID)
+  messageId: ObjectID;
+  @Field(() => String, { nullable: true, defaultValue: [] })
+  tags: string[];
 }
 
 @InputType()

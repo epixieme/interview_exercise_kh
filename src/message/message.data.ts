@@ -29,6 +29,7 @@ export class MessageData {
     chatMessage.conversationId = data.conversationId;
     chatMessage.created = new Date();
     chatMessage.deleted = false;
+    chatMessage.tags = data.tags;
 
     createRichContent(data, chatMessage);
 
@@ -91,9 +92,12 @@ export class MessageData {
     if (!message) {
       throw new Error('Message not found');
     }
+
     message.deleted = true;
+
     await message.save();
-    return message;
+
+    return chatMessageToObject(message);
   }
 
   async resolve(messageId: ObjectID): Promise<ChatMessage> {
@@ -124,6 +128,26 @@ export class MessageData {
     );
     if (!unresolved) throw new Error('The message to unresolve does not exist');
     return chatMessageToObject(unresolved);
+  }
+
+  async updateTags(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+    // Find and update the document by ID, set new tags, and return the updated document
+    const result = await this.chatMessageModel.findOneAndUpdate(
+      { _id: messageId },
+      { $set: { tags } },
+      { new: true }, // This option ensures the returned document is the updated one
+    );
+
+    // if no result is returned, throw an error
+    if (!result) {
+      throw new Error('Could not update tags on chat message');
+    }
+
+    // Convert the updated document to the ChatMessage object
+    const message = chatMessageToObject(result);
+
+    // Return the updated ChatMessage object I could have used chatcacheManagerService also
+    return message;
   }
 
   async like(userId: ObjectID, messageId: ObjectID): Promise<ChatMessage> {

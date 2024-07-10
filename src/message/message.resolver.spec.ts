@@ -48,6 +48,7 @@ const chatMessage: ChatMessage = {
   resolved: false,
   likes: [],
   likesCount: 0,
+  tags: ['test'],
 };
 
 describe('MessageResolver', () => {
@@ -106,6 +107,7 @@ describe('MessageResolver', () => {
       return Promise.resolve({
         ...chatMessage,
         text: messageDto.text,
+        tags: messageDto.tags,
       });
     }
 
@@ -132,6 +134,7 @@ describe('MessageResolver', () => {
             id,
             text: 'a chat message',
             sender: { id: senderId.toHexString() },
+            tags: ['test'],
           },
         ];
       }
@@ -147,6 +150,7 @@ describe('MessageResolver', () => {
             text: 'a chat message',
             sender: { id: senderId.toHexString() },
             richContent: {},
+            tags: [],
           },
         ];
       }
@@ -160,6 +164,7 @@ describe('MessageResolver', () => {
             created: new Date('2020-12-31'),
             id,
             text: 'a reply message',
+            tags: ['test'],
             sender: { id: senderId.toHexString() },
             richContent: {
               reply: {
@@ -223,12 +228,13 @@ describe('MessageResolver', () => {
       jest.spyOn(messageLogic, 'create');
       const message: MessageDto = {
         text: 'test',
+        tags: ['test'],
         conversationId,
       };
 
       resolver.sendConversationMessage(message, authenticatedUser);
       expect(messageLogic.create).toBeCalledWith(
-        { conversationId, text: 'test' },
+        { conversationId, text: 'test', tags: ['test'] },
         { accountRole: 'admin', userId },
       );
     });
@@ -237,13 +243,14 @@ describe('MessageResolver', () => {
       jest.spyOn(messageLogic, 'create');
       const message: MessageDto = {
         text: 'test',
+        tags: ['test'],
         conversationId,
         richContent: {},
       };
 
       resolver.sendConversationMessage(message, authenticatedUser);
       expect(messageLogic.create).toBeCalledWith(
-        { conversationId, richContent: {}, text: 'test' },
+        { conversationId, richContent: {}, text: 'test', tags: ['test'] },
         { accountRole: 'admin', userId },
       );
     });
@@ -252,6 +259,7 @@ describe('MessageResolver', () => {
       jest.spyOn(messageLogic, 'create');
       const message: MessageDto = {
         text: 'test',
+        tags: ['test'],
         conversationId,
         richContent: {
           reply: {
@@ -270,6 +278,7 @@ describe('MessageResolver', () => {
             },
           },
           text: 'test',
+          tags: ['test'],
         },
         { accountRole: 'admin', userId },
       );
@@ -303,6 +312,7 @@ describe('MessageResolver', () => {
           likesCount: 0,
           sender: { id: senderId.toHexString() },
           text: 'a chat message',
+          tags: ['test'],
         },
       ]);
     });
@@ -334,6 +344,7 @@ describe('MessageResolver', () => {
           richContent: {},
           sender: { id: senderId.toHexString() },
           text: 'a chat message',
+          tags: [],
         },
       ]);
     });
@@ -369,6 +380,7 @@ describe('MessageResolver', () => {
           },
           sender: { id: senderId.toHexString() },
           text: 'a reply message',
+          tags: ['test'],
         },
       ]);
     });
@@ -544,6 +556,7 @@ describe('MessageResolver', () => {
 
       const message: MessageDto = {
         text: '',
+        tags: [],
         conversationId,
         richContent: {
           poll: mockPoll,
@@ -558,6 +571,7 @@ describe('MessageResolver', () => {
             poll: mockPoll,
           },
           text: '',
+          tags: [],
         },
         { accountRole: 'admin', userId },
       );

@@ -121,6 +121,8 @@ export class ChatMessageModel {
 
   @Prop()
   text: string;
+  @Prop()
+  tags: string[];
 
   @Prop({ required: true, type: () => Date })
   created: Date;
@@ -194,6 +196,7 @@ export function chatMessageToObject(
   });
 
   function maskDeletedMessageText(deleted: boolean, text: string) {
+    console.log('deleted status', deleted, text);
     if (deleted) return 'This message has been deleted';
     return text;
   }

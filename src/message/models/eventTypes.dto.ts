@@ -20,6 +20,7 @@ export type MessagePayload = {
   createdAt: string;
   messageText: string;
   senderId: string;
+  tags: string[];
   senderRole?: string;
   giphyType?: 'gif' | 'sticker';
   imageCount?: number;

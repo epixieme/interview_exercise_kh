@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import {
   ChatMessage,
   PaginatedChatMessages,
@@ -48,6 +54,7 @@ import {
   MessagesFilterInput,
 } from '../conversation/models/messagesFilterInput';
 
+export type ChatMessageDTO = ChatMessageModel;
 export interface IMessageLogic {
   create(
     messageDto: MessageDto,
@@ -145,6 +152,7 @@ export class MessageLogic implements IMessageLogic {
       richContent: await this.mapRichContent(messageDto, message),
       resolved: message.resolved,
       isSenderBlocked: false,
+      tags: message.tags,
     });
 
     this.conversationChannel.send(sendMessageEvent, conversationId);
@@ -278,7 +286,6 @@ export class MessageLogic implements IMessageLogic {
     return blockedUsers.map((user) => user.blockedUserId);
   }
 
-
   async getChatConversationMessages(
     getMessageDto: GetMessageDto,
     authenticatedUser: IAuthenticatedUser,
@@ -313,7 +320,6 @@ export class MessageLogic implements IMessageLogic {
       paginatedChatMessages,
       blockedUserIds,
     );
-  
 
     return paginatedChatMessages;
   }
@@ -436,6 +442,15 @@ export class MessageLogic implements IMessageLogic {
     );
 
     return message;
+  }
+
+  async updateTags(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+    try {
+      const updatedRecord = await this.messageData.updateTags(messageId, tags);
+      return updatedRecord;
+    } catch (error) {
+      throw new Error('Message not found');
+    }
   }
 
   async like(

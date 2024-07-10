@@ -16,7 +16,7 @@ export async function createMessageDataForTest(
   let i = 0;
   for (i; i < count; i++) {
     const message = await messageData.create(
-      { conversationId, text: `Message ${i + 1}` },
+      { conversationId, text: `Message ${i + 1}`, tags: ['test'] },
       senderId,
     );
     messageArray.push(message.id);

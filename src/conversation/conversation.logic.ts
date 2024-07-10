@@ -280,7 +280,6 @@ export class ConversationLogic implements IConversationLogic {
   async createDirectChatConversation(
     directChatConversationDto: DirectChatConversationDto,
   ): Promise<ConversationDTO> {
-
     const memberIds = [
       directChatConversationDto.userToConverseWith,
       directChatConversationDto.currentUserId,
@@ -483,6 +482,7 @@ export class ConversationLogic implements IConversationLogic {
         likesCount: message.likesCount,
         richContent: richContent,
         resolved: message.resolved,
+        tags: message.tags,
       },
     });
 

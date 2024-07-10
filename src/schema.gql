@@ -29,14 +29,6 @@ type Reaction {
   userIds: [String!]!
 }
 
-type ChatConversation {
-  id: ID!
-  unreadMessageCount: Int
-  lastMessage: ChatMessage
-  pinnedMessages: [ChatMessage!]!
-  pinnedMessagesCount: Int!
-}
-
 type UserField {
   id: String
 }
@@ -107,6 +99,7 @@ type ChatMessage {
   richContent: RichMessageContent
   reactions: [Reaction!]
   isSenderBlocked: Boolean
+  tags: [String!]
 }
 
 """
@@ -117,6 +110,14 @@ scalar DateTime
 type PaginatedChatMessages {
   messages: [ChatMessage!]!
   hasMore: Boolean!
+}
+
+type ChatConversation {
+  id: ID!
+  unreadMessageCount: Int
+  lastMessage: ChatMessage
+  pinnedMessages: [ChatMessage!]!
+  pinnedMessagesCount: Int!
 }
 
 type LastRead {
@@ -179,6 +180,7 @@ input unpinMessageDTO {
 
 input MessageDto {
   text: String!
+  tags: [String!] = []
   conversationId: ObjectId!
   richContent: RichContentDto
 }
