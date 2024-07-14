@@ -128,6 +128,7 @@ export class MessageResolver {
   @UseGuards(GqlAuthGuard)
   async updateTags(
     @Args('updateMessageTagsDto') updateMessageTagsDto: UpdateMessageTagsDto,
+    @AuthenticatedUser() authenticatedUser: IAuthenticatedUser,
   ): Promise<ChatMessage> {
     return await this.messageLogic.updateTags(
       updateMessageTagsDto.messageId,

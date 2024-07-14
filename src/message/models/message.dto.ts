@@ -159,7 +159,7 @@ export class ResolveMessageDto {
 export class UpdateMessageTagsDto {
   @Field(() => ObjectID)
   messageId: ObjectID;
-  @Field(() => String, { nullable: true, defaultValue: [] })
+  @Field(() => String)
   tags: string[];
 }
 
