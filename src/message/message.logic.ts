@@ -19,6 +19,7 @@ import {
   ResolveMessageDto,
   ReactionDto,
   PollOptionDto,
+  UpdateMessageTagsDto,
 } from './models/message.dto';
 import { MessageData } from './message.data';
 import { IAuthenticatedUser } from '../authentication/jwt.strategy';
@@ -444,9 +445,20 @@ export class MessageLogic implements IMessageLogic {
     return message;
   }
 
-  async updateTags(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+  async updateTags(
+    updateMessageTagsDto: UpdateMessageTagsDto,
+    authenticatedUser: IAuthenticatedUser,
+  ): Promise<ChatMessage> {
     try {
-      const updatedRecord = await this.messageData.updateTags(messageId, tags);
+      await this.throwForbiddenErrorIfNotAuthorized(
+        authenticatedUser,
+        updateMessageTagsDto.messageId,
+        Action.updateMessage,
+      );
+      const updatedRecord = await this.messageData.updateTags(
+        updateMessageTagsDto.messageId,
+        updateMessageTagsDto.tags,
+      );
       return updatedRecord;
     } catch (error) {
       throw new Error('Message not found');

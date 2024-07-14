@@ -131,8 +131,8 @@ export class MessageResolver {
     @AuthenticatedUser() authenticatedUser: IAuthenticatedUser,
   ): Promise<ChatMessage> {
     return await this.messageLogic.updateTags(
-      updateMessageTagsDto.messageId,
-      updateMessageTagsDto.tags,
+      updateMessageTagsDto,
+      authenticatedUser,
     );
   }
 
